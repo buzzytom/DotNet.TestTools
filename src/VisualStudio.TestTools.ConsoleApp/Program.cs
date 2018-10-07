@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -11,35 +12,51 @@ namespace VisualStudio.TestTools.ConsoleApp
 {
     public static class Program
     {
-        private static Stopwatch stopwatch = new Stopwatch();
-        private static Stopwatch stopwatchTotal = new Stopwatch();
-
         public static int Main(string[] args)
         {
             try
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 Run(args)
                     .GetAwaiter()
                     .GetResult();
+
+                stopwatch.Stop();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("All Tasks Complete.");
+                Console.WriteLine($"{stopwatch.Elapsed.Milliseconds}ms");
+
                 return 0;
             }
-            catch
+            catch (Exception exception)
             {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine(exception.Message);
                 return 1;
+            }
+            finally
+            {
+                Console.ForegroundColor = ConsoleColor.White;
             }
         }
 
         public static async Task Run(string[] args)
         {
-            stopwatchTotal.Start();
+            // Get the configuration path
+            string configurationPath = args.FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(configurationPath))
+                throw new ArgumentException("A configuration path must be specified.");
 
-            Uri[] testProjectUris = new Uri[]
-            {
-            };
+            // Read the configuration
+            string text = File.ReadAllText(configurationPath);
+            Configuration configuration = JsonConvert.DeserializeObject<Configuration>(text);
 
-            Uri[] changes = new Uri[]
-            {
-            };
+            // Decode the configuration values
+            Uri workingDirectory = new Uri(Environment.CurrentDirectory, UriKind.Absolute);
+            Uri[] testProjectUris = configuration.GetTestProjectUris(workingDirectory);
+            Uri[] changes = configuration.GetChanges(workingDirectory);
 
             if (testProjectUris.Length == 0)
             {
@@ -66,17 +83,12 @@ namespace VisualStudio.TestTools.ConsoleApp
                 Console.WriteLine($"----- {project.GetShortName()} -----");
                 await project.Test(runner);
             }
-
-            stopwatchTotal.Stop();
-            Console.WriteLine();
-            Console.WriteLine("All Tasks Complete.");
-            Console.WriteLine($"{stopwatchTotal.Elapsed.Milliseconds}ms");
         }
 
         private static Project[] ReadProjects(this Uri[] paths)
         {
             Console.WriteLine($"Reading {paths.Length} test project{paths.Length.GetPluralisation()}...");
-            stopwatch.Restart();
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             IProjectReader reader = new CsProjectReader();
             Project[] projects = paths
@@ -94,7 +106,7 @@ namespace VisualStudio.TestTools.ConsoleApp
         {
             Console.WriteLine();
             Console.WriteLine($"Analyzing test projects affected by the file changes.");
-            stopwatch.Restart();
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             Project[] changed = TestChangeDetectorHelper
                 .GetAffectedTestProjects(projects, changes)
@@ -109,7 +121,7 @@ namespace VisualStudio.TestTools.ConsoleApp
 
         private static async Task Test(this Project project, ITestRunner runner)
         {
-            stopwatch.Restart();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             Console.WriteLine();
             Console.WriteLine($"Running tests...");
             if (!await runner.RunTests(project))
