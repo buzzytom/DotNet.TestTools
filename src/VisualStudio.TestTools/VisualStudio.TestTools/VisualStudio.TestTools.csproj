@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <PackageId>Buzzytom.System.Linq.Sql</PackageId>
+    <Authors>Thomas Williams</Authors>
+    <Company>Thomas Williams</Company>
+    <Copyright>© Thomas Williams 2018</Copyright>
+    <RepositoryUrl>https://github.com/buzzytom/VisualStudio.TestTools</RepositoryUrl>
+    <PackageTags>Visual Studio Test Tools Analyzer Runner</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>A project structure analyser and test runner. Run the tests for the project changes you are committing!</Description>
+  </PropertyGroup>
+
+</Project>
