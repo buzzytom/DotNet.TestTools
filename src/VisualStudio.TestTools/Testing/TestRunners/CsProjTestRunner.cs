@@ -5,14 +5,9 @@ namespace VisualStudio.TestTools.Testing
 {
     public class CsProjTestRunner : ITestRunner
     {
-        public Task<bool> Build(Project project)
+        public async Task<bool> RunTests(Project project)
         {
-            return Task.FromResult(true);
-        }
-
-        public Task<bool> RunTests(Project project)
-        {
-            return Task.FromResult(true);
+            return await ProcessHelper.Run(project.FolderUri, "dotnet test") == 0;
         }
     }
 }

@@ -12,6 +12,7 @@ namespace VisualStudio.TestTools.ConsoleApp
     public static class Program
     {
         private static Stopwatch stopwatch = new Stopwatch();
+        private static Stopwatch stopwatchTotal = new Stopwatch();
 
         public static int Main(string[] args)
         {
@@ -30,6 +31,8 @@ namespace VisualStudio.TestTools.ConsoleApp
 
         public static async Task Run(string[] args)
         {
+            stopwatchTotal.Start();
+
             Uri[] testProjectUris = new Uri[]
             {
             };
@@ -61,12 +64,13 @@ namespace VisualStudio.TestTools.ConsoleApp
             {
                 Console.WriteLine();
                 Console.WriteLine($"----- {project.GetShortName()} -----");
-                await project.Build(runner);
                 await project.Test(runner);
             }
 
+            stopwatchTotal.Stop();
             Console.WriteLine();
             Console.WriteLine("All Tasks Complete.");
+            Console.WriteLine($"{stopwatchTotal.Elapsed.Milliseconds}ms");
         }
 
         private static Project[] ReadProjects(this Uri[] paths)
@@ -101,21 +105,6 @@ namespace VisualStudio.TestTools.ConsoleApp
             Console.WriteLine($"{stopwatch.Elapsed.Milliseconds}ms");
 
             return changed;
-        }
-
-        private static async Task Build(this Project project, ITestRunner runner)
-        {
-            stopwatch.Restart();
-            Console.WriteLine();
-            Console.WriteLine($"Building...");
-            if (!await runner.Build(project))
-            {
-                Console.WriteLine($"Failed to build project! {project.GetShortName()}");
-                throw new Exception($"Failed to build project! {project.GetShortName()}");
-            }
-            stopwatch.Stop();
-            Console.WriteLine("Done!");
-            Console.WriteLine($"{stopwatch.Elapsed.Milliseconds}ms");
         }
 
         private static async Task Test(this Project project, ITestRunner runner)
