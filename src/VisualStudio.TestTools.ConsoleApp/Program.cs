@@ -56,10 +56,7 @@ namespace VisualStudio.TestTools.ConsoleApp
             // Decode the configuration values
             Uri workingDirectory = new Uri(Environment.CurrentDirectory, UriKind.Absolute);
             Uri[] testProjectUris = configuration.GetTestProjectUris(workingDirectory);
-
-            Uri[] changes = new Uri[]
-            {
-            };
+            Uri[] changes = configuration.GetChanges(workingDirectory);
 
             if (testProjectUris.Length == 0)
             {
@@ -110,7 +107,7 @@ namespace VisualStudio.TestTools.ConsoleApp
             Console.WriteLine();
             Console.WriteLine($"Analyzing test projects affected by the file changes.");
             Stopwatch stopwatch = Stopwatch.StartNew();
-            
+
             Project[] changed = TestChangeDetectorHelper
                 .GetAffectedTestProjects(projects, changes)
                 .ToArray();
