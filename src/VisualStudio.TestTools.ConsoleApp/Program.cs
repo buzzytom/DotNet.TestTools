@@ -59,7 +59,7 @@ namespace VisualStudio.TestTools.ConsoleApp
                 .GetAffectedByChanges(changes);
 
             // Build and run tests
-            ITestRunner runner = new CsProjTestRunner();
+            ITestRunner runner = new DotNetTestRunner();
             foreach (Project project in projects)
             {
                 Console.WriteLine();

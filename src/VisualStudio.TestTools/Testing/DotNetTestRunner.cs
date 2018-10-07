@@ -3,7 +3,7 @@ using VisualStudio.TestTools.Projects;
 
 namespace VisualStudio.TestTools.Testing
 {
-    public class CsProjTestRunner : ITestRunner
+    public class DotNetTestRunner : ITestRunner
     {
         public async Task<bool> RunTests(Project project)
         {
