@@ -49,6 +49,7 @@ namespace VisualStudio.TestTools.Projects
             // Create and index the new project instance
             Project created = new Project
             {
+                FolderUri = new Uri(uri, "./"),
                 Uri = uri,
                 BinaryUri = GetOutputBinaryUri(uri, targetFramework, type),
                 TargetFramework = targetFramework,

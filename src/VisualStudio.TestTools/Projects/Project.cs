@@ -11,6 +11,8 @@ namespace VisualStudio.TestTools.Projects
             KnownDependants = new List<Project>();
         }
 
+        public Uri FolderUri { set; get; }
+
         public Uri Uri { set; get; }
 
         public Uri BinaryUri { set; get; }

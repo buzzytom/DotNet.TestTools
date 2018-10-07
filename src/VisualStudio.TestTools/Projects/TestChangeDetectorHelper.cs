@@ -14,8 +14,7 @@ namespace VisualStudio.TestTools.Projects
             HashSet<Project> changed = new HashSet<Project>();
             foreach (Project project in flattened)
             {
-                Uri folder = new Uri(project.Uri, "./");
-                if (changes.Any(x => folder.IsBaseOf(x)))
+                if (changes.Any(x => project.FolderUri.IsBaseOf(x)))
                     changed.Add(project);
             }
 
