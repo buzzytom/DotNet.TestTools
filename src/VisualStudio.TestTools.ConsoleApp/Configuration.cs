@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace VisualStudio.TestTools.ConsoleApp
+namespace DotNet.TestTools.ConsoleApp
 {
     public class Configuration
     {

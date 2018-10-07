@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using VisualStudio.TestTools.Projects;
+using DotNet.TestTools.Projects;
 
-namespace VisualStudio.TestTools.Testing
+namespace DotNet.TestTools.Testing
 {
     public interface ITestRunner
     {

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace VisualStudio.TestTools
+namespace DotNet.TestTools
 {
     public static class ProcessHelper
     {

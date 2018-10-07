@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VisualStudio.TestTools.Projects
+namespace DotNet.TestTools.Projects
 {
     public interface IProjectReader
     {

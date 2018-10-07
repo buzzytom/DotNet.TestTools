@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VisualStudio.TestTools.Projects
+namespace DotNet.TestTools.Projects
 {
     public static class TestChangeDetectorHelper
     {

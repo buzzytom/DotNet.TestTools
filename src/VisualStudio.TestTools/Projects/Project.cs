@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace VisualStudio.TestTools.Projects
+namespace DotNet.TestTools.Projects
 {
     public class Project
     {

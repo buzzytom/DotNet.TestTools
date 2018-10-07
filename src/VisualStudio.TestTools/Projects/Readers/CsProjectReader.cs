@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace VisualStudio.TestTools.Projects
+namespace DotNet.TestTools.Projects
 {
     public class CsProjectReader : IProjectReader
     {

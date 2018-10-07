@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VisualStudio.TestTools\VisualStudio.TestTools.csproj" />
+    <ProjectReference Include="..\VisualStudio.TestTools\DotNet.TestTools.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,10 +5,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using VisualStudio.TestTools.Projects;
-using VisualStudio.TestTools.Testing;
+using DotNet.TestTools.Projects;
+using DotNet.TestTools.Testing;
 
-namespace VisualStudio.TestTools.ConsoleApp
+namespace DotNet.TestTools.ConsoleApp
 {
     public static class Program
     {

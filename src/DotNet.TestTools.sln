@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio.TestTools", "VisualStudio.TestTools\VisualStudio.TestTools.csproj", "{2350E8F1-692A-49E5-885B-C4DCE79A75F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.TestTools", "VisualStudio.TestTools\DotNet.TestTools.csproj", "{2350E8F1-692A-49E5-885B-C4DCE79A75F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio.TestTools.ConsoleApp", "VisualStudio.TestTools.ConsoleApp\VisualStudio.TestTools.ConsoleApp.csproj", "{A37A78F9-15A6-43B8-9895-BE883C2EAADE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNet.TestTools.ConsoleApp", "VisualStudio.TestTools.ConsoleApp\DotNet.TestTools.ConsoleApp.csproj", "{A37A78F9-15A6-43B8-9895-BE883C2EAADE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
