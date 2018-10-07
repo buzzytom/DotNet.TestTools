@@ -16,12 +16,39 @@ namespace VisualStudio.TestTools.ConsoleApp
             {
             };
 
+            Uri[] changes = new Uri[]
+            {
+            };
+
+            if (testProjectUris.Length == 0)
+            {
+                Console.WriteLine("No test projects.");
+                return;
+            }
+
+            if (changes.Length == 0)
+            {
+                Console.WriteLine("No changes to test.");
+                return;
+            }
+
             // Read the projects structures
             Console.WriteLine($"Reading {testProjectUris.Length} test project{testProjectUris.Length.GetPluralisation()}...");
             stopwatch.Start();
             IEnumerable<Project> projects = ReadProjects(testProjectUris);
             stopwatch.Stop();
-            Console.WriteLine($"Done! {stopwatch.Elapsed.Milliseconds}ms");
+            Console.WriteLine($"Done!");
+            Console.WriteLine($"{stopwatch.Elapsed.Milliseconds}ms");
+
+            // Detect the test projects affected by the changes
+            Console.WriteLine();
+            Console.WriteLine($"Analyzing test projects affected by the file changes.");
+            stopwatch.Restart();
+            projects = TestChangeDetectorHelper.GetAffectedTestProjects(projects, changes);
+            int count = projects.Count();
+            stopwatch.Stop();
+            Console.WriteLine($"Done! {count} test project{count.GetPluralisation()} affected.");
+            Console.WriteLine($"{stopwatch.Elapsed.Milliseconds}ms");
         }
 
         private static IEnumerable<Project> ReadProjects(IEnumerable<Uri> paths)
