@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 
@@ -32,6 +33,9 @@ namespace VisualStudio.TestTools.Projects
             if (!configuration.TryGetValue("TargetFramework", out string targetFramework))
                 throw new Exception($"The project file {uri} does not define a TargetFramework.");
 
+            // Read the output type
+            OutputType type = DecodeOutputType(configuration);
+
             // Read the project references
             Uri[] references = root.ChildNodes
                 .Where(x => x.Name == "ItemGroup")
@@ -46,7 +50,7 @@ namespace VisualStudio.TestTools.Projects
             Project created = new Project
             {
                 Uri = uri,
-                BinaryUri = CreateReferenceUri(uri, $"./bin/Debug/{targetFramework}/"),
+                BinaryUri = GetOutputBinaryUri(uri, targetFramework, type),
                 TargetFramework = targetFramework,
                 Dependencies = references
                     .Select(x => ReadProject(x))
@@ -81,6 +85,46 @@ namespace VisualStudio.TestTools.Projects
                 .SelectMany(x => x.ChildNodes)
                 .Where(x => identifiers.Contains(x.Name))
                 .ToDictionary(x => x.Name, x => x.InnerText);
+        }
+
+        private Uri GetOutputBinaryUri(Uri current, string targetFramework, OutputType type)
+        {
+            string name = Path.GetFileNameWithoutExtension(current.LocalPath);
+            string extension = GetOutputExtension(type);
+            return new Uri(current, $"./Debug/{targetFramework}/{name}.{extension}");
+        }
+
+        private string GetOutputExtension(OutputType type)
+        {
+            switch (type)
+            {
+                case OutputType.Executable:
+                    return "exe";
+                case OutputType.Dll:
+                    return "dll";
+                default:
+                    throw new NotSupportedException($"The output type of {type} is not known.");
+            }
+        }
+
+        private OutputType DecodeOutputType(IDictionary<string, string> configuration)
+        {
+            if (!configuration.TryGetValue("OutputType", out string type))
+                return OutputType.Dll;
+
+            switch (type)
+            {
+                case "Exe":
+                    return OutputType.Executable;
+                default:
+                    throw new NotSupportedException($"The output type of {type} is not known.");
+            }
+        }
+
+        private enum OutputType
+        {
+            Dll = 0,
+            Executable = 1
         }
     }
 }
