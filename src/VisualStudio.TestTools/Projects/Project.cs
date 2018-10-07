@@ -13,6 +13,8 @@ namespace VisualStudio.TestTools.Projects
 
         public Uri Uri { set; get; }
 
+        public Uri BinaryUri { set; get; }
+
         public string TargetFramework { set; get; }
 
         public IEnumerable<Project> Dependencies { set; get; }

@@ -25,12 +25,12 @@ namespace VisualStudio.TestTools.Projects
             if (root == null)
                 throw new Exception("No root Project element found.");
 
+            // Read the configuration
+            IDictionary<string, string> configuration = ReadConfiguration(root, "TargetFramework");
+
             // Read the target framework
-            string targetFramework = root.ChildNodes
-                .Where(x => x.Name == "PropertyGroup")
-                .SelectMany(x => x.ChildNodes)
-                .FirstOrDefault(x => x.Name == "TargetFramework")?
-                .InnerText;
+            if (!configuration.TryGetValue("TargetFramework", out string targetFramework))
+                throw new Exception($"The project file {uri} does not define a TargetFramework.");
 
             // Read the project references
             Uri[] references = root.ChildNodes
@@ -46,6 +46,7 @@ namespace VisualStudio.TestTools.Projects
             Project created = new Project
             {
                 Uri = uri,
+                BinaryUri = CreateReferenceUri(uri, $"./bin/Debug/{targetFramework}/"),
                 TargetFramework = targetFramework,
                 Dependencies = references
                     .Select(x => ReadProject(x))
@@ -64,13 +65,22 @@ namespace VisualStudio.TestTools.Projects
             return created;
         }
 
-        private Uri CreateReferenceUri(Uri current, string reference)
+        private static Uri CreateReferenceUri(Uri current, string reference)
         {
             if (Uri.TryCreate(reference, UriKind.Absolute, out Uri absolute))
                 return absolute;
             if (Uri.TryCreate(current, reference, out Uri relative))
                 return relative;
             throw new Exception($"Could not resolve a uri for {reference}.");
+        }
+
+        private IDictionary<string, string> ReadConfiguration(XmlNode root, params string[] identifiers)
+        {
+            return root.ChildNodes
+                .Where(x => x.Name == "PropertyGroup")
+                .SelectMany(x => x.ChildNodes)
+                .Where(x => identifiers.Contains(x.Name))
+                .ToDictionary(x => x.Name, x => x.InnerText);
         }
     }
 }
