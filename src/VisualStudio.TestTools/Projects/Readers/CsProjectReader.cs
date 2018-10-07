@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
@@ -6,8 +7,15 @@ namespace VisualStudio.TestTools.Projects
 {
     public class CsProjectReader : IProjectReader
     {
+        private HashSet<Project> projects = new HashSet<Project>();
+
         public Project ReadProject(Uri uri)
         {
+            // Resolve if the project has already been parsed
+            Project existing = projects.FirstOrDefault(x => x.Uri == uri);
+            if (existing != null)
+                return existing;
+
             // Load the document
             XmlDocument document = new XmlDocument();
             document.Load(uri.ToString());
@@ -34,14 +42,26 @@ namespace VisualStudio.TestTools.Projects
                 .Select(x => CreateReferenceUri(uri, x))
                 .ToArray();
 
-            return new Project
+            // Create and index the new project instance
+            Project created = new Project
             {
                 Uri = uri,
                 TargetFramework = targetFramework,
-                References = references
+                Dependencies = references
                     .Select(x => ReadProject(x))
                     .ToArray()
             };
+            projects.Add(created);
+
+            // Make sure the created project is a dependant of all its references
+            foreach (Project parent in created.Dependencies)
+            {
+                parent.KnownDependants = parent.KnownDependants
+                    .Union(new[] { created })
+                    .ToArray();
+            }
+
+            return created;
         }
 
         private Uri CreateReferenceUri(Uri current, string reference)
