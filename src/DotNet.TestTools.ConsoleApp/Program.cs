@@ -14,6 +14,7 @@ namespace DotNet.TestTools.ConsoleApp
     {
         public static int Main(string[] args)
         {
+            ConsoleColor previous = Console.ForegroundColor;
             try
             {
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -38,7 +39,7 @@ namespace DotNet.TestTools.ConsoleApp
             }
             finally
             {
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = previous;
             }
         }
 

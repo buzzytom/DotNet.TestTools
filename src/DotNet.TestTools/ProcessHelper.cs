@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace DotNet.TestTools
@@ -10,14 +11,22 @@ namespace DotNet.TestTools
         {
             TaskCompletionSource<int> completion = new TaskCompletionSource<int>();
 
+            string filename = "/bin/bash";
+            string processArguments = "-c \"{0}\"";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                filename = "cmd.exe";
+                processArguments = "/C {0}";
+            }
+
             Process process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = "cmd.exe",
+                    FileName = filename,
                     WorkingDirectory = workingDirectory.LocalPath,
-                    Arguments = $"/C {arguments}",
+                    Arguments = string.Format(processArguments, arguments),
                 },
                 EnableRaisingEvents = true
             };

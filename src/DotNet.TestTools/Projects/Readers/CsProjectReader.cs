@@ -74,7 +74,7 @@ namespace DotNet.TestTools.Projects
         {
             if (Uri.TryCreate(reference, UriKind.Absolute, out Uri absolute))
                 return absolute;
-            if (Uri.TryCreate(current, reference, out Uri relative))
+            if (Uri.TryCreate(current, reference.Replace('\\', '/'), out Uri relative))
                 return relative;
             throw new Exception($"Could not resolve a uri for {reference}.");
         }
